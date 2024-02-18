@@ -7,7 +7,7 @@ from .models import WifiAccesPoint
 class WifiAccesPointType(DjangoObjectType):
     class Meta:
         model = WifiAccesPoint
-        fields = ("id","programa","fecha_instalacion","latitud","longitud","colonia","alcaldia","distancia")
+        fields = ("id","programa","fecha_instalacion","latitud","longitud","colonia","alcaldia")
 
 
 class Query(graphene.ObjectType):
