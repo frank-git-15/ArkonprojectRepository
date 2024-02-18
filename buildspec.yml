@@ -18,10 +18,7 @@ phases:
     commands:
       - echo Running tests on `date`
       - cd arkonproject  
-      - pytest || exit_code=$?
-      - pytest_output=$(pytest)
-      - echo "$pytest_output"
-      - exit $exit_code
+      - pytest
       - cd ..
       - echo tests end on `date`
       - echo Build completed on `date`
