@@ -10,4 +10,4 @@ def test_hello_endpoint():
     query = '''query { hello }'''
     response = client.execute(query)
 
-    assert "Hello" in response["data"]["hello"]
+    assert "Hola" in response["data"]["hello"]
