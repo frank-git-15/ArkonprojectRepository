@@ -11,7 +11,7 @@ phases:
   build:
     commands:
       - echo Running tests on `date`
-      - cd .\arkonproject\
+      - cd arkonproject  
       - pytest || exit 1  # Salir con código 1 si las pruebas fallan
       - cd ..
       - echo tests end on `date`
