@@ -10,6 +10,9 @@ phases:
   
   build:
     commands:
+      - echo Running tests on `date`
+      - arkonproject\pytest || exit 1  # Salir con código 1 si las pruebas fallan
+      - echo tests end on `date`
       - echo Build completed on `date`
       - echo building docker image
       - docker build -t $ECR_DIR:latest .
@@ -20,3 +23,4 @@ phases:
       - echo building completed on `date`
       - echo pushing the docker image
       - docker push $ECR_DIR:latest
+
