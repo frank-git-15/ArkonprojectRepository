@@ -15,6 +15,7 @@ class Query(graphene.ObjectType):
     hello = graphene.String(default_value = "Hello")
     puntosDeAccesoWifi = graphene.List(WifiAccesPointType,page=graphene.Int(),pageSize=graphene.Int())
     puntoDeAcceso = graphene.Field(WifiAccesPointType,id= graphene.String(required=True))
+    puntosdeAccesoPorColonia = graphene.List(WifiAccesPointType,colonia= graphene.String(required=True),page=graphene.Int(),page_size=graphene.Int())
 
     def resolve_puntosDeAccesoWifi(self,info,page,pageSize):
             #Aqui se realiza la consulta a base de datos para eso usamos el modelo PuntoDeAccesoWifi 
@@ -39,6 +40,24 @@ class Query(graphene.ObjectType):
         except WifiAccesPoint.DoesNotExist:
              return None
 
+    def resolve_puntosdeAccesoPorColonia(self,info,colonia,page,page_size):
+        try:
+
+            queryset = WifiAccesPoint.objects.filter(colonia=colonia)
+            #Paginar los resultados
+            #Se dividen los resultados de la consulta en el tamaño de pagina deseada
+            paginator = Paginator(queryset,page_size)
+
+            #Se obtiene la pagina deseada
+            paginated_query = paginator.get_page(page)
+
+            return paginated_query
+
+
+
+        except WifiAccesPoint.DoesNotExist:
+            return []
+      
 
 
 schema = graphene.Schema(query=Query)

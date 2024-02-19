@@ -77,3 +77,43 @@ def test_puntoDeAccesoWifi_endpoint():
     print(programa)
 
     assert "mi programa3" == programa
+
+@pytest.mark.django_db
+def test_puntosdeAccesoPorColonia_endpoint():
+    # Creacion de un cliente GraphQL
+    #Se crean 6 registros de prueba donde 3 registros o puntos de acceso pertenecen a la misma colonia
+    WifiAccesPoint.objects.create(id="mi id",programa="mi programa",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia",alcaldia="mi alcaldia")
+    WifiAccesPoint.objects.create(id="mi id2",programa="mi programa2",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia2",alcaldia="mi alcaldia2")
+    WifiAccesPoint.objects.create(id="mi id3",programa="mi programa3",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia3",alcaldia="mi alcaldia3")
+    WifiAccesPoint.objects.create(id="mi id4",programa="mi programa",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia",alcaldia="mi alcaldia")
+    WifiAccesPoint.objects.create(id="mi id5",programa="mi programa2",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia",alcaldia="mi alcaldia2")
+    WifiAccesPoint.objects.create(id="mi id6",programa="mi programa3",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia3",alcaldia="mi alcaldia3")
+    # Creacion de un cliente GraphQL
+    client = Client(schema)
+
+    # Definicion de la consulta GraphQL
+    query = '''
+        query {
+            puntosdeAccesoPorColonia(colonia:"Mi colonia",page:1,pageSize:23){
+                id
+                colonia
+        }
+        }
+    '''
+
+    # Ejecucion de la consulta
+    response = client.execute(query)
+    print("Response ....")
+    print(response)
+
+    # Verificar que la respuesta no contiene errores
+    assert "errors" not in response
+
+    
+    #Se revisa cuantos puntos de acceso hubo en la colonia Mi colonia
+    cantidad_resultados = len(response["data"]["puntosdeAccesoPorColonia"])
+    print(cantidad_resultados)
+
+    #Deben de ser 3 puntos de acceso
+    assert cantidad_resultados == 3
+    
