@@ -14,6 +14,7 @@ class WifiAccesPointType(DjangoObjectType):
 class Query(graphene.ObjectType):
     hello = graphene.String(default_value = "Hello")
     puntosDeAccesoWifi = graphene.List(WifiAccesPointType,page=graphene.Int(),pageSize=graphene.Int())
+    puntoDeAcceso = graphene.Field(WifiAccesPointType,id= graphene.String(required=True))
 
     def resolve_puntosDeAccesoWifi(self,info,page,pageSize):
             #Aqui se realiza la consulta a base de datos para eso usamos el modelo PuntoDeAccesoWifi 
@@ -32,7 +33,11 @@ class Query(graphene.ObjectType):
             except WifiAccesPoint.DoesNotExist:
                 return []
 
-            
+    def resolve_puntoDeAcceso(self,info,id):
+        try:
+            return WifiAccesPoint.objects.get(id=id)
+        except WifiAccesPoint.DoesNotExist:
+             return None
 
 
 

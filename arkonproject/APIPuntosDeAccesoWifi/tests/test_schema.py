@@ -1,7 +1,5 @@
-import json
 import pytest
 from graphene.test import Client
-from django.test import TestCase
 from APIPuntosDeAccesoWifi.schema import schema 
 from APIPuntosDeAccesoWifi.models import WifiAccesPoint
 
@@ -46,3 +44,36 @@ def test_puntosDeAccesoWifi_endpoint():
     id_primer_resultado = puntos[0]["id"]
     assert "mi id" == id_primer_resultado
 
+@pytest.mark.django_db
+def test_puntoDeAccesoWifi_endpoint():
+    # Creacion de un cliente GraphQL
+    WifiAccesPoint.objects.create(id="mi id",programa="mi programa",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia",alcaldia="mi alcaldia")
+    WifiAccesPoint.objects.create(id="mi id2",programa="mi programa2",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia2",alcaldia="mi alcaldia2")
+    WifiAccesPoint.objects.create(id="mi id3",programa="mi programa3",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia3",alcaldia="mi alcaldia3")
+    # Creacion de un cliente GraphQL
+    client = Client(schema)
+
+    # Definicion de la consulta GraphQL
+    query = '''
+        query {
+            puntoDeAcceso(id:"mi id3"){
+                id
+                programa
+        }
+        }
+    '''
+
+    # Ejecucion de la consulta
+    response = client.execute(query)
+    print("Response ....")
+    print(response)
+
+    # Verificar que la respuesta no contiene errores
+    assert "errors" not in response
+
+    
+    #Comprobar que el programa es "mi programa3"
+    programa = response["data"]["puntoDeAcceso"]["programa"]
+    print(programa)
+
+    assert "mi programa3" == programa
