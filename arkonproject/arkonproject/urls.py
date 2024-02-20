@@ -19,5 +19,6 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    #Aqui se indica que cuando no se indique nada se usaran las urls que este la app APIPuntosDeAccesoWifi
     path("",include("APIPuntosDeAccesoWifi.urls"))
 ]

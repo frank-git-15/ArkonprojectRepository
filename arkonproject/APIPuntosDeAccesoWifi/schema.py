@@ -15,11 +15,18 @@ class WifiAccesPointType(DjangoObjectType):
 
 class Query(graphene.ObjectType):
     hello = graphene.String(default_value = "Hello")
+
+    #Aqui se define los endpoints disponible junto con sus parametros si es que requieren
     puntosDeAccesoWifi = graphene.List(WifiAccesPointType,page=graphene.Int(),pageSize=graphene.Int())
     puntoDeAcceso = graphene.Field(WifiAccesPointType,id= graphene.String(required=True))
     puntosdeAccesoPorColonia = graphene.List(WifiAccesPointType,colonia= graphene.String(required=True),page=graphene.Int(),page_size=graphene.Int())
     puntosDeAccesoMasCercanos = graphene.List(WifiAccesPointType,latitud = graphene.Float(required=True),longitud = graphene.Float(required=True),page=graphene.Int(),page_size=graphene.Int())
 
+    #En esta seccion se crean la funciones que resolveran las peticiones de los endpoints en este caso esta funion resulve la peticion del endpoint puntosDeAccesoWifi
+    #El cual regresa una lista de puntos de acceso todo el resultado esta paginado
+    #Cada end poinr tiene su resolve funcion de acuaerdo a lo que se quiera retorna 
+
+    #Resolve para devolver todos los puntos de acceso wifi
     def resolve_puntosDeAccesoWifi(self,info,page,pageSize):
             #Aqui se realiza la consulta a base de datos para eso usamos el modelo PuntoDeAccesoWifi 
             #que es el modelo de la base de datos, consultamos todos lo objetos
@@ -37,12 +44,14 @@ class Query(graphene.ObjectType):
             except WifiAccesPoint.DoesNotExist:
                 return []
 
+    #Resolve para regresar un solo punto de acceso wifi en base a su ID
     def resolve_puntoDeAcceso(self,info,id):
         try:
             return WifiAccesPoint.objects.get(id=id)
         except WifiAccesPoint.DoesNotExist:
              return None
 
+    #Resolve para devolver los puntos de acceso wifi en una colonia espefica
     def resolve_puntosdeAccesoPorColonia(self,info,colonia,page,page_size):
         try:
 
@@ -73,6 +82,7 @@ class Query(graphene.ObjectType):
     es una aproximacion a la formula original
     """
 
+    #Resolve para regresas una lista de puntos de acceso wifi mas cercanos a unas coordenadas dadas
     def resolve_puntosDeAccesoMasCercanos(self,info,latitud,longitud,page,page_size):
         
         try:

@@ -3,15 +3,19 @@ from graphene.test import Client
 from APIPuntosDeAccesoWifi.schema import schema 
 from APIPuntosDeAccesoWifi.models import WifiAccesPoint
 
+#Unit test para cada endpoint
+
+#Unit test para probrar el endpoint puntosDeAccesoWifi
 @pytest.mark.django_db
 def test_puntosDeAccesoWifi_endpoint():
-    # Creacion de un cliente GraphQL
+    # Creacion de registros de prueba
     WifiAccesPoint.objects.create(id="mi id",programa="mi porgrama",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia",alcaldia="mi alcaldia")
     WifiAccesPoint.objects.create(id="mi id2",programa="mi porgrama2",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia2",alcaldia="mi alcaldia2")
     WifiAccesPoint.objects.create(id="mi id3",programa="mi porgrama3",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia3",alcaldia="mi alcaldia3")
     client = Client(schema)
 
-    # Definicion de la consulta GraphQL
+    # Definicion de la consulta GraphQL 
+    #Consultar el endpoint puntosDeAccesoWifi pidiendo la primera pagina y que cada pagina sea de 2 elementos
     query = '''
         query {
             puntosDeAccesoWifi(page:1,pageSize:2){
@@ -44,16 +48,17 @@ def test_puntosDeAccesoWifi_endpoint():
     id_primer_resultado = puntos[0]["id"]
     assert "mi id" == id_primer_resultado
 
+#Unit test para el enpoint puntoDeAccesoWifi
 @pytest.mark.django_db
 def test_puntoDeAccesoWifi_endpoint():
-    # Creacion de un cliente GraphQL
+    # Creacion de registros de prueba
     WifiAccesPoint.objects.create(id="mi id",programa="mi programa",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia",alcaldia="mi alcaldia")
     WifiAccesPoint.objects.create(id="mi id2",programa="mi programa2",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia2",alcaldia="mi alcaldia2")
     WifiAccesPoint.objects.create(id="mi id3",programa="mi programa3",fecha_instalacion="2016-02-25",latitud=129,longitud=129,colonia="Mi colonia3",alcaldia="mi alcaldia3")
     # Creacion de un cliente GraphQL
     client = Client(schema)
 
-    # Definicion de la consulta GraphQL
+    # Definicion de la consulta GraphQL para consulta un punto de acceso wifi en base a un ID
     query = '''
         query {
             puntoDeAcceso(id:"mi id3"){
@@ -78,6 +83,7 @@ def test_puntoDeAccesoWifi_endpoint():
 
     assert "mi programa3" == programa
 
+#Unit test para el endpoint puntosdeAccesoPorColonia
 @pytest.mark.django_db
 def test_puntosdeAccesoPorColonia_endpoint():
     # Creacion de un cliente GraphQL
@@ -91,7 +97,7 @@ def test_puntosdeAccesoPorColonia_endpoint():
     # Creacion de un cliente GraphQL
     client = Client(schema)
 
-    # Definicion de la consulta GraphQL
+    # Definicion de la consulta GraphQL donde se consultan los puntos de acceso wifi que esten en la colonia Mi colonia
     query = '''
         query {
             puntosdeAccesoPorColonia(colonia:"Mi colonia",page:1,pageSize:23){
@@ -118,7 +124,7 @@ def test_puntosdeAccesoPorColonia_endpoint():
     assert cantidad_resultados == 3
 
 
-
+#Unittest para el endpoint puntosDeAccesoMasCercanos
 @pytest.mark.django_db
 def test_puntosDeAccesoMasCercanos_endpoint():
     # Creacion de un cliente GraphQL
@@ -133,6 +139,7 @@ def test_puntosDeAccesoMasCercanos_endpoint():
     client = Client(schema)
 
     # Definicion de la consulta GraphQL
+    #Se consultan todos los puntos de acceso wifi ordenados del punto mas cercano a las coordenadas dadas hasta el mas lejano
     query = '''
         query {
             puntosDeAccesoMasCercanos(latitud:19.42700,longitud:-99.1171,page:1,pageSize:2){
