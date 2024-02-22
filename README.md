@@ -31,7 +31,52 @@ Esta API consulta una base de datos de los puntos de acceso wifi en la Ciudad de
 
    La API estará disponible en http://localhost:8000/graphql
 
-## Uso
+## APIs disponibles
+
+```bash
+    Atributos
+    Cada ENDPOINT puede retornar estos atributos de un punto de acceso wifi
+     - id
+     - programa
+     - fechaInstalacion
+     - latitud
+     - longitud
+     - colonia
+     - alcaldia   
+```
+
+1. puntosDeAccesoWifi
+    ```bash
+    ENDPOINT que devuelve una lista con todos los puntos de acceso wifi en la Ciudad de Mexico de manera paginada
+    Parametros
+        - page: numero de pagina que queremos obtener, es un tipo de dato entero
+        - pageSize: cantidad de resultados que queremos por pagina, es un tipo de dato enter
+    ```
+3. puntoDeAcceso
+   ```bash
+    ENDPOINT que devuelve el punto de acceso wifi que tenga el mismo ID que se le manda como parametro
+    Parametros
+        - id: id del punto de acceso wifi que queremos obtener
+    ```
+5. puntosdeAccesoPorColonia
+     ```bash
+    ENDPOINT que devuelve una lista de puntos de acceso wifi en la Ciudad de Mexico pertenecientes a cierta colonia
+    Parametros
+        - colonia: nombre de la colonia de la cual queremos obtener todos los puntos de acceso wifi disponibles
+        - page: numero de pagina que queremos obtener, es un tipo de dato entero
+        - pageSize: cantidad de resultados que queremos por pagina, es un tipo de dato enter
+    ```
+7. puntosDeAccesoMasCercanos
+     ```bash
+    ENDPOINT que devuelve una lista con todos los puntos de acceso wifi en la Ciudad de Mexico ordenados desde el mas cercano a las coordenadas  dadas en los parametros
+     hasta el punto mas lejano, esta lista tambien esta paginada
+    Parametros
+        - latitud: tipo de dato flotante
+        - longitud: tipo de dato flotante
+        - page: numero de pagina que queremos obtener, es un tipo de dato entero
+        - pageSize: cantidad de resultados que queremos por pagina, es un tipo de dato enter
+    ```
+## Uso y ejemplos
 
 La API se ejecuta en `http://localhost:8000/graphql`. 
 Puedes interactuar con GraphQL utilizando herramientas como GraphiQL o enviar consultas directamente. A continuación, un ejemplo de consulta GraphQL:
